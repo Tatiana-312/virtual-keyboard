@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 1400px;
+    margin: 0 auto;
+}
+
+.title {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    font-size: 70px;
+    margin: 15px;
+}
+
+.textarea {
+    width: 100%;
+    height: 450px;
+    border: 4px solid rgb(132, 168, 132);
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 20px;
+    font-size: 40px;
+}
+
+.keyboard {
+    display: flex;
+    column-gap: 10px;
+    row-gap: 15px;
+    flex-wrap: wrap;
+    padding: 10px;
+    width: 100%;
+    // height: 550px;
+    border: 4px solid black;
+    border-radius: 10px;
+    background-color: #888888;
+}
+
+.key {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    background-color: #444444;
+    border-radius: 5px
+}
+
+.key:hover {
+    cursor: pointer;
+    background-color: rgb(132, 168, 132) !important;
+}
+
+#backspace-key {
+    width: 202px;
+    background-color: #222222;
+}
+
+#tab-key {
+    width: 95px;
+    background-color: #222222;
+}
+
+#del-key {
+    width: 97px;
+    background-color: #222222;
+}
+
+#caps-key {
+    width: 190px;
+    background-color: #222222;
+}
+
+#enter-key {
+    width: 182px;
+    background-color: #222222;
+}
+
+#left-shift-key {
+    width: 190px;
+    background-color: #222222;
+}
+
+#up-arrow-key {
+    background-color: #222222;
+}
+
+#right-shift-key {
+    width: 182px;
+    background-color: #222222;
+}
+
+#left-ctrl-key {
+    width: 92px;
+    background-color: #222222;
+}
+
+#win-key {
+    background-color: #222222;
+}
+
+#left-alt-key {
+    background-color: #222222;
+}
+
+#space-key {
+    width: 628px;
+}
+
+#right-alt-key {
+    background-color: #222222;
+}
+
+#left-arrow-key {
+    background-color: #222222;
+}
+
+#down-arrow-key {
+    background-color: #222222;
+}
+
+#right-arrow-key {
+    background-color: #222222;
+}
+
+#right-ctrl-key {
+    width: 92px;
+    background-color: #222222;
+}
+
+span {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: white;
+    font-size: 32px;
+}
