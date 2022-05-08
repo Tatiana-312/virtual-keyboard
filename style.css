@@ -57,6 +57,8 @@
   height: 80px;
   background-color: #444444;
   border-radius: 5px;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
 }
 
 .key:hover {
@@ -64,81 +66,53 @@
   background-color: #84a884 !important;
 }
 
-#backspace-key {
+.key-active {
+  border-radius: 50px;
+  background-color: #6fcc6f !important;
+}
+
+.dark-bg {
+  background-color: #222222;
+}
+
+.backspace-key {
   width: 202px;
-  background-color: #222222;
 }
 
-#tab-key {
+.tab-key {
   width: 95px;
-  background-color: #222222;
 }
 
-#del-key {
+.del-key {
   width: 97px;
-  background-color: #222222;
 }
 
-#caps-key {
+.caps-key {
   width: 190px;
-  background-color: #222222;
 }
 
-#enter-key {
+.enter-key {
   width: 182px;
-  background-color: #222222;
 }
 
-#left-shift-key {
+.left-shift-key {
   width: 190px;
-  background-color: #222222;
 }
 
-#up-arrow-key {
-  background-color: #222222;
-}
-
-#right-shift-key {
+.right-shift-key {
   width: 182px;
-  background-color: #222222;
 }
 
-#left-ctrl-key {
+.left-ctrl-key {
   width: 92px;
-  background-color: #222222;
 }
 
-#win-key {
-  background-color: #222222;
-}
-
-#left-alt-key {
-  background-color: #222222;
-}
-
-#space-key {
+.space-key {
   width: 628px;
 }
 
-#right-alt-key {
-  background-color: #222222;
-}
-
-#left-arrow-key {
-  background-color: #222222;
-}
-
-#down-arrow-key {
-  background-color: #222222;
-}
-
-#right-arrow-key {
-  background-color: #222222;
-}
-
-#right-ctrl-key {
+.right-ctrl-key {
   width: 92px;
-  background-color: #222222;
 }
 
 span {

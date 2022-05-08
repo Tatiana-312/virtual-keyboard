@@ -1,27 +1,27 @@
-import { Button } from './button.js';
+import { KeyButton, ControlButton } from './button.js';
 
 let buttons = [
-    new Button('`'), new Button('1'), new Button('2'),
-    new Button('3'), new Button('4'), new Button('5'), 
-    new Button('6'), new Button('7'), new Button('8'), 
-    new Button('9'), new Button('0'), new Button('-'),
-    new Button('='), new Button('Backspace', 'backspace-key'), new Button('Tab', 'tab-key'),
-    new Button('q'), new Button('w'), new Button('e'),
-    new Button('r'), new Button('t'), new Button('y'),
-    new Button('u'), new Button('i'), new Button('o'),
-    new Button('p'), new Button('['), new Button(']'),
-    new Button('\\'), new Button('Del', 'del-key'), new Button('CapsLock', 'caps-key'),
-    new Button('a'), new Button('s'), new Button('d'),
-    new Button('f'), new Button('g'), new Button('h'),
-    new Button('j'), new Button('k'), new Button('l'),
-    new Button(';'), new Button('&apos;'), new Button('Enter', 'enter-key'),
-    new Button('Shift', 'left-shift-key'), new Button('z'), new Button('x'),
-    new Button('c'), new Button('v'), new Button('b'),
-    new Button('n'), new Button('m'), new Button(','),
-    new Button('.'), new Button('/'), new Button('&#9650;', 'up-arrow-key'),
-    new Button('Shift', 'right-shift-key'), new Button('Ctrl', 'left-ctrl-key'), new Button('Win', 'win-key'),
-    new Button('Alt', 'left-alt-key'), new Button('', 'space-key'), new Button('Alt', 'right-alt-key'),
-    new Button('&#9668;', 'left-arrow-key'), new Button('&#9660;', 'down-arrow-key'), new Button('&#9658;', 'right-arrow-key'), new Button('Ctrl', 'right-ctrl-key'),
+    new KeyButton('`', 'Backquote'), new KeyButton('1', 'Digit1'), new KeyButton('2', 'Digit2'),
+    new KeyButton('3', 'Digit3'), new KeyButton('4', 'Digit4'), new KeyButton('5', 'Digit5'), 
+    new KeyButton('6', 'Digit6'), new KeyButton('7', 'Digit7'), new KeyButton('8', 'Digit8'), 
+    new KeyButton('9', 'Digit9'), new KeyButton('0', 'Digit0'), new KeyButton('-', 'Minus'),
+    new KeyButton('=', 'Equal'), new ControlButton('Backspace', 'Backspace', ['backspace-key']), new ControlButton('Tab', 'Tab', ['tab-key']),
+    new KeyButton('q'), new KeyButton('w'), new KeyButton('e'),
+    new KeyButton('r'), new KeyButton('t'), new KeyButton('y'),
+    new KeyButton('u'), new KeyButton('i'), new KeyButton('o'),
+    new KeyButton('p'), new KeyButton('[', 'BracketLeft'), new KeyButton(']', 'BracketRight'),
+    new KeyButton('\\', 'Backslash'), new ControlButton('Del', 'Delete', ['del-key']), new ControlButton('CapsLock', 'CapsLock', ['caps-key']),
+    new KeyButton('a'), new KeyButton('s'), new KeyButton('d'),
+    new KeyButton('f'), new KeyButton('g'), new KeyButton('h'),
+    new KeyButton('j'), new KeyButton('k'), new KeyButton('l'),
+    new KeyButton(';', 'Semicolon'), new KeyButton('&apos;', 'Quote'), new ControlButton('Enter', 'Enter', ['enter-key']),
+    new ControlButton('Shift', 'ShiftLeft', ['left-shift-key']), new KeyButton('z'), new KeyButton('x'),
+    new KeyButton('c'), new KeyButton('v'), new KeyButton('b'),
+    new KeyButton('n'), new KeyButton('m'), new KeyButton(',', 'Comma'),
+    new KeyButton('.', 'Period'), new KeyButton('/', 'Slash'), new ControlButton('&#9650;', 'ArrowUp'),
+    new ControlButton('Shift', 'ShiftRight', ['right-shift-key']), new ControlButton('Ctrl', 'ControlLeft', ['left-ctrl-key']), new ControlButton('Win', 'MetaLeft'),
+    new ControlButton('Alt', 'AltLeft'), new KeyButton('', 'Space', ['space-key']), new ControlButton('Alt', 'AltRight'),
+    new ControlButton('&#9668;', 'ArrowLeft'), new ControlButton('&#9660;', 'ArrowDown'), new ControlButton('&#9658;', 'ArrowRight'), new ControlButton('Ctrl', 'ControlRight', ['right-ctrl-key']),
 ];
 document.body.onload = addElements;
 
@@ -34,8 +34,12 @@ function addElements() {
         const KEY = document.createElement('div');
         KEY.innerHTML = `<span>${buttons[i].en}</span>`;
         KEYBOARD.append(KEY);
-        KEY.classList.add('key');
-        buttons[i].id === undefined ? KEY.removeAttribute('id') : KEY.id = `${buttons[i].id}`;
+
+        buttons[i].cssClasses.forEach(cssClass => {
+            KEY.classList.add(cssClass);
+        });
+
+        buttons[i].code === undefined ? KEY.id = `Key${buttons[i].en.toUpperCase()}` : KEY.id = `${buttons[i].code}`;
     }
 
     document.body.append(CONTAINER);
@@ -49,5 +53,18 @@ function addElements() {
     TITLE.classList.add('title');
     INPUT_FIELD.classList.add('textarea');
     KEYBOARD.classList.add('keyboard');
-
 }
+
+function addHighlight(event) {
+    const code = event.code;
+    console.log(code);
+    document.getElementById(`${code}`).classList.add('key-active');
+}
+
+function removeHighlight(event) {
+    const code = event.code;
+    document.getElementById(`${code}`).classList.remove('key-active');
+}
+
+document.addEventListener('keydown', addHighlight);
+document.addEventListener('keyup', removeHighlight);
