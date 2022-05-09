@@ -25,6 +25,9 @@ let buttons = [
 ];
 document.body.onload = addElements;
 
+let layout = localStorage.getItem('layout');
+let lang = layout ? layout : 'en';
+
 function addElements() {
     const CONTAINER = document.createElement('div');
     const TITLE = document.createElement('h1');
@@ -35,16 +38,18 @@ function addElements() {
     for (let i = 0; i < buttons.length; i++) {
         const KEY = document.createElement('div');
 
-        // console.log(buttons[i] instanceof ControlButton);
-
         if (buttons[i] instanceof ControlButton) {
             buttons[i].ru = buttons[i].en;
             buttons[i].shiftRu = buttons[i].en;
             buttons[i].shiftEn = buttons[i].en;
-            // console.log(buttons[i]);
         }
 
-        KEY.innerHTML = `<span>${buttons[i].en}</span>`;
+        if ( lang == 'en') {
+            KEY.innerHTML = `<span>${buttons[i].en}</span>`;
+        } else if (lang == 'ru') {
+            KEY.innerHTML = `<span>${buttons[i].ru}</span>`;
+        }
+        
         KEYBOARD.append(KEY);
 
         buttons[i].cssClasses.forEach(cssClass => {
@@ -73,30 +78,44 @@ function addElements() {
 
 function addHighlight(event) {
     const code = event.code;
-    // console.log(code);
     document.getElementById(`${code}`).classList.add('key-active');
 }
 
 function removeHighlight(event) {
     const code = event.code;
-    // console.log(code);
     document.getElementById(`${code}`).classList.remove('key-active');
 }
 
 function printValue(event) {
     const INPUT_FIELD = document.querySelector('.textarea');
+    INPUT_FIELD.focus();
     const code = event.code;
 
-    // if (event.shiftKey) {
-        
-    // }
-
-    INPUT_FIELD.setRangeText(document.getElementById(`${code}`).querySelector('span').innerText, INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    if (event.code == 'Delete') {
+        INPUT_FIELD.setRangeText('', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd + 1, "end");
+    } else if (event.code == 'Backspace') { 
+        if (INPUT_FIELD.selectionStart == 0) {
+            return false;
+        }
+        INPUT_FIELD.setRangeText('', INPUT_FIELD.selectionStart - 1, INPUT_FIELD.selectionEnd, "end");
+    } else if (event.code == 'Tab') { 
+        INPUT_FIELD.setRangeText('\t', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else if (event.code == 'CapsLock' || event.code == 'ControlLeft' || event.code == 'ControlRight' || event.code == 'AltLeft' || event.code == 'AltRight' || event.code == 'ShiftLeft' || event.code == 'ShiftRight') { 
+        INPUT_FIELD.setRangeText('', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else if (event.code == 'Enter') { 
+        INPUT_FIELD.setRangeText('\n', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else if (event.code == 'MetaLeft') { 
+        INPUT_FIELD.setRangeText('', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else if (event.code == 'Space') { 
+        INPUT_FIELD.setRangeText(' ', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else {
+        INPUT_FIELD.setRangeText(document.getElementById(`${code}`).querySelector('span').innerText, INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    }
     // INPUT_FIELD.textContent += document.getElementById(`${code}`).querySelector('span').innerText;
     // console.log(INPUT_FIELD.value);
 }
 
-let lang = 'en';
+// localStorage.setItem('layout', 'en');
 
 document.addEventListener('keydown', printValue);
 document.addEventListener('mousedown', (event) => {
@@ -106,17 +125,53 @@ document.addEventListener('mousedown', (event) => {
     if (KEY == null) {
         return false;
       }
-    INPUT_FIELD.setRangeText(KEY.querySelector('span').innerText, INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    let code = KEY.getAttribute('id');
+
+      if (code == 'Delete') {
+        INPUT_FIELD.setRangeText('', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd + 1, "end");
+    } else if (code == 'Backspace') { 
+        if (INPUT_FIELD.selectionStart == 0) {
+            return false;
+        }
+        INPUT_FIELD.setRangeText('', INPUT_FIELD.selectionStart - 1, INPUT_FIELD.selectionEnd, "end");
+    } else if (code == 'Tab') { 
+        INPUT_FIELD.setRangeText('\t', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else if (code == 'CapsLock' || code == 'ControlLeft' || code == 'ControlRight' || code == 'AltLeft' || code == 'AltRight' || code == 'ShiftLeft' || code == 'ShiftRight') { 
+        INPUT_FIELD.setRangeText('', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else if (code == 'Enter') { 
+        INPUT_FIELD.setRangeText('\n', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else if (code == 'MetaLeft') { 
+        INPUT_FIELD.setRangeText('', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else if (code == 'Space') { 
+        INPUT_FIELD.setRangeText(' ', INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    } else {
+        INPUT_FIELD.setRangeText(KEY.querySelector('span').innerText, INPUT_FIELD.selectionStart, INPUT_FIELD.selectionEnd, "end");
+    }
+    INPUT_FIELD.focus();
+    INPUT_FIELD.onblur = () => INPUT_FIELD.focus();
 });
 
 
 document.addEventListener('keydown', addHighlight);
 document.addEventListener('keyup', removeHighlight);
-// document.addEventListener('keypress', (event) => {
-//     if (event.getModifierState('CapsLock')) {
-//         document.getElementById(`${code}`).classList.add('key-active');
-//     }
-// })
+
+let SELECTED_MOUSE_KEY = 0;
+
+document.addEventListener('mousedown', (event) => {
+    let target = event.target;
+    SELECTED_MOUSE_KEY = target.closest('.key');
+    if (SELECTED_MOUSE_KEY == null) {
+        return false;
+      }
+    SELECTED_MOUSE_KEY.classList.add('key-active');
+})
+
+document.addEventListener('mouseup', () => {
+    if (SELECTED_MOUSE_KEY == null) {
+        return false;
+      }
+    SELECTED_MOUSE_KEY.classList.remove('key-active');
+})
 
 document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.code == 'AltLeft' || event.altKey && event.code == 'ControlLeft') {
@@ -125,11 +180,14 @@ document.addEventListener('keydown', (event) => {
                 document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].ru}</span>`;
             }
             lang = 'ru';
+            localStorage.setItem('layout', 'ru');
+
         } else {
             for (let i = 0; i < buttons.length; i++) {
                 document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].en}</span>`;
             }
             lang = 'en';
+            localStorage.setItem('layout', 'en');
         }
     }
 });
@@ -169,40 +227,156 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-document.addEventListener('keydown', (event) => {
-    if (event.code == 'ShiftLeft' || event.code == 'ShiftRight') {
-        if (lang === 'en') {
-            for (let i = 0; i < buttons.length; i++) {
-                if (buttons[i].en.length === 1) {
-                    document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].shiftEn}</span>`;
+document.addEventListener('mousedown', (event) => {
+    let target = event.target;
+    let KEY = target.closest('.key');
+
+    if (KEY == null) {
+        return false;
+      }
+
+    if (KEY.getAttribute('id') == 'CapsLock') {
+        KEY.classList.toggle('caps-active');
+        if (KEY.classList.contains('caps-active')) {
+            if (lang === 'en') {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].en.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].en.toUpperCase()}</span>`;
+                    }
                 }
-            }
+            } else {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].ru.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].ru.toUpperCase()}</span>`;
+                    }
+                }
+            } 
         } else {
-            for (let i = 0; i < buttons.length; i++) {
-                if (buttons[i].ru.length === 1) {
-                    document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].shiftRu}</span>`;
+            if (lang === 'en') {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].en.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].en.toLowerCase()}</span>`;
+                    }
                 }
-            }
-        } 
+            } else {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].ru.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].ru.toLowerCase()}</span>`;
+                    }
+                }
+            } 
+        }
+    } 
+});
+
+document.addEventListener('mousedown', (event) => {
+    let target = event.target;
+    let KEY = target.closest('.key');
+
+    if (KEY == null) {
+        return false;
+      }
+    if (KEY.getAttribute('id') == 'ShiftLeft') {
+        KEY.classList.toggle('shift-active');
+        if (KEY.classList.contains('shift-active')) {
+                if (lang === 'en') {
+                    for (let i = 0; i < buttons.length; i++) {
+                        if (buttons[i].en.length === 1) {
+                            document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].shiftEn}</span>`;
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < buttons.length; i++) {
+                        if (buttons[i].ru.length === 1) {
+                            document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].shiftRu}</span>`;
+                        }
+                    }
+                } 
+        } else {
+            if (lang === 'en') {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].en.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].en}</span>`;
+                    }
+                }
+            } else {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].ru.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].ru}</span>`;
+                    }
+                }
+            } 
+        }
+    } 
+})
+
+document.addEventListener('keydown', (event) => {
+    if (event.code == 'ShiftLeft' || event.code == 'ShiftRight' || event.shiftKey) {
+        if (event.getModifierState('CapsLock')) {
+            if (lang === 'en') {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].en.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].shiftEn.toLowerCase()}</span>`;
+                    }
+                }
+            } else {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].ru.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].shiftRu.toLowerCase()}</span>`;
+                    }
+                }
+            } 
+        } else {
+            if (lang === 'en') {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].en.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].shiftEn}</span>`;
+                    }
+                }
+            } else {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].ru.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].shiftRu}</span>`;
+                    }
+                }
+            } 
+        }
     } 
 })
 
 document.addEventListener('keyup', (event) => {
     if (event.code == 'ShiftLeft' || event.code == 'ShiftRight') {
-        if (lang === 'en') {
-            for (let i = 0; i < buttons.length; i++) {
-                if (buttons[i].en.length === 1) {
-                    document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].en}</span>`;
+        if (event.getModifierState('CapsLock')) {
+            if (lang === 'en') {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].en.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].en.toUpperCase()}</span>`;
+                    }
                 }
-            }
+            } else {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].ru.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].ru.toUpperCase()}</span>`;
+                    }
+                }
+            } 
         } else {
-            for (let i = 0; i < buttons.length; i++) {
-                if (buttons[i].ru.length === 1) {
-                    document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].ru}</span>`;
+            if (lang === 'en') {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].en.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].en}</span>`;
+                    }
                 }
-            }
-        } 
-    }
+            } else {
+                for (let i = 0; i < buttons.length; i++) {
+                    if (buttons[i].ru.length === 1) {
+                        document.querySelectorAll('.key')[i].innerHTML = `<span>${buttons[i].ru}</span>`;
+                    }
+                }
+            } 
+        }
+    } 
 })
+
 
 

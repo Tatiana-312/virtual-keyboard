@@ -57,13 +57,17 @@
   height: 41px;
   background-color: #444444;
   border-radius: 3px;
-  -webkit-transition: 0.3s;
-  transition: 0.3s;
+  -webkit-transition: 0.1s;
+  transition: 0.1s;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .key:hover {
   cursor: pointer;
-  background-color: #84a884 !important;
+  background-color: #84a884;
 }
 
 .key-active {
@@ -72,6 +76,11 @@
 }
 
 .caps-active {
+  border-radius: 50px;
+  background-color: #6fcc6f !important;
+}
+
+.shift-active {
   border-radius: 50px;
   background-color: #6fcc6f !important;
 }
