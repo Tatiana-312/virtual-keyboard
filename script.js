@@ -1,5 +1,7 @@
 // eslint-disable-next-line
-import { KeyButton, ControlButton } from './button.js';
+import KeyButton from './button.js';
+// eslint-disable-next-line
+import ControlButton from './controlButton.js';
 
 const buttons = [
   new KeyButton('`', 'ё', 'Ё', '`', 'Backquote'), new KeyButton('1', '1', '!', '!', 'Digit1'), new KeyButton('2', '2', '"', '@', 'Digit2'),
